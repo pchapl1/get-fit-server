@@ -3,7 +3,7 @@ from .models import Workout, Exercise, WorkoutExercise
 from exercises.serializers import ExerciseSerializer
 
 
-class WorkoutExerciseSerializer(serializers.Serializer):
+class WorkoutExerciseSerializer(serializers.ModelSerializer):
     exercise = ExerciseSerializer()
 
     class Meta:
