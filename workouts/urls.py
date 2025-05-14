@@ -4,7 +4,7 @@ from .views import WorkoutViewSet
 
 # Set up the router and register the Workout viewset
 router = DefaultRouter()
-router.register(r'workouts', WorkoutViewSet)
+router.register(r'', WorkoutViewSet)
 # router.register(r'workout_exercises', WorkoutExerciseViewSet, basename='workoutexercise')
 
 urlpatterns = [

@@ -1,6 +1,4 @@
 from django.db import models
-
-# Create your models here.
 class Exercise(models.Model):
     name = models.CharField(max_length=255)
     category = models.CharField(max_length=50, choices=[('Push', 'Push'), ('Pull', 'Pull'), ('Legs', 'Legs')])
