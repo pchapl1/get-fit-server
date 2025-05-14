@@ -30,6 +30,41 @@ class ExerciseAPITestCase(APITestCase):
         self.assertEqual(Exercise.objects.count(), 2)
         self.assertEqual(response.data['name'], 'Squat')
 
+    def test_create_exercise_with_missing_name(self):
+        """Exercise creation should fail if 'name' is missing."""
+        data = {
+            "category": "pull",
+            "muscles_targeted": ["biceps"]
+        }
+        response = self.client.post(self.list_url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("name", response.data)
+
+    def test_create_exercise_with_invalid_category(self):
+        """Exercise creation should fail with an invalid category."""
+        data = {
+            "name": "Row",
+            "category": "cardio",  # invalid if choices are push/pull/legs
+            "muscles_targeted": ["back"]
+        }
+        response = self.client.post(self.list_url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("category", response.data)
+
+    def test_create_exercise_with_empty_muscles_targeted(self):
+        """Exercise creation should fail if muscles_targeted is empty."""
+        data = {
+            "name": "Squat",
+            "category": "legs",
+            "muscles_targeted": []  # assume at least one is required
+        }
+        response = self.client.post(self.list_url, data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("muscles_targeted", response.data)
+
     def test_read_exercise_list(self):
         response = self.client.get(self.list_url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -74,3 +109,22 @@ class ExerciseAPITestCase(APITestCase):
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Exercise.objects.count(), 0)
+
+
+    def test_get_nonexistent_exercise_returns_404(self):
+        url = reverse('exercise-detail', kwargs={'pk': 999})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_nonexistent_exercise_returns_404(self):
+        url = reverse('exercise-detail', kwargs={'pk': 999})
+        data = {"name": "Nonexistent"}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+
+    def test_delete_nonexistent_exercise_returns_404(self):
+        url = reverse('exercise-detail', kwargs={'pk': 999})
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
