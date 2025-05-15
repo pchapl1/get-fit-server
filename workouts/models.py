@@ -7,7 +7,7 @@ class Workout(models.Model):
     name = models.CharField(max_length=255)
     type = models.CharField(max_length=50)
     date = models.DateField(auto_now_add=True)  # Auto set the date when created
-    duration = models.DurationField(blank=True)
+    duration = models.DurationField(blank=True, null=True)
     completed_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
