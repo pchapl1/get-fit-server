@@ -13,7 +13,7 @@ class WorkoutExerciseSerializer(serializers.ModelSerializer):
 class WorkoutSerializer(serializers.ModelSerializer):
     # source comes from the related name in the WorkoutExercise Model and defines what each item looks like
     exercises = WorkoutExerciseSerializer(source = "workout_exercises", many = True, read_only = True)
-
+    print('exercises exercises exercises')
     class Meta:
         model = Workout
         fields = "__all__"
